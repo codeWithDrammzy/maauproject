@@ -1,0 +1,70 @@
+{% extends "soniHouseAgent/adminpage/base.html" %}
+{% block content %}
+<main class="col-span-1 md:col-span-8 px-4">
+  <div class="max-w-6xl mx-auto space-y-8 mt-4">
+
+    <!-- Stat Cards -->
+   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <!-- Properties -->
+  <div class="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 rounded-xl shadow">
+    <h3 class="text-lg font-semibold">Total Properties</h3>
+    <p class="text-3xl font-bold mt-2">{{ property_count }}</p>
+  </div>
+
+  <!-- Tenants -->
+  <div class="bg-gradient-to-r from-green-500 to-green-700 text-white p-6 rounded-xl shadow">
+    <h3 class="text-lg font-semibold">Active Tenants</h3>
+    <p class="text-3xl font-bold mt-2">{{ tenant_count }}</p>
+  </div>
+
+  <!-- Landlords -->
+  <div class="bg-gradient-to-r from-yellow-500 to-yellow-700 text-white p-6 rounded-xl shadow">
+    <h3 class="text-lg font-semibold">Total Landlords</h3>
+    <p class="text-3xl font-bold mt-2">{{ landlord_count }}</p>
+  </div>
+
+
+  
+</div>
+
+    <!-- Payment Status Table -->
+    <section class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-semibold mb-4">Tenant Payment Status</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left border border-gray-200 rounded">
+          <thead class="bg-gray-100 text-gray-600">
+            <tr>
+              <th class="px-4 py-2">Tenant</th>
+              <th class="px-4 py-2">Apartment</th>
+              <th class="px-4 py-2">Last Payment</th>
+              <th class="px-4 py-2">Status</th>
+            </tr>
+          </thead>
+          {% for tenant in tenant_status %}
+            <tbody class="text-gray-700">
+              <tr class="border-b">
+                <td class="px-4 py-2 font-medium">{{ tenant.first_name|title }} {{ tenant.last_name|title }}</td>
+                <td class="px-4 py-2">{{ tenant.house|title }}</td>
+                <td class="px-4 py-2">{{ tenant.last_payment_date }}</td>
+                <td class="px-4 py-2">
+                  {% with status=tenant.get_payment_status %}
+                    {% if status == 'overdue' %}
+                      <span class="text-red-600 font-semibold">Overdue</span>
+                    {% elif status == 'due_soon' %}
+                      <span class="text-yellow-600 font-semibold">Due Soon</span>
+                    {% else %}
+                      <span class="text-green-600 font-semibold">Paid</span>
+                    {% endif %}
+                  {% endwith %}
+                </td>
+              </tr>
+            </tbody>
+          {% endfor %}
+
+        </table>
+      </div>
+    </section>
+
+  </div>
+</main>
+{% endblock %}
